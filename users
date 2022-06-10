@@ -1,0 +1,209 @@
+# User class						
+# 	it has to have name, surname, email, date of birth, gender, access level = "user"				
+# 	he's supposed to be changing email
+#   create posts, edit own posts, delete own posts				
+# 
+# Overclass administrator						
+# The class will inherit information from the User with additional features						
+# 	it has to have an access level on "admin" for itself				
+# 	it has to do to change the user class access level to admin	
+#   has acces to all posts
+# 
+# Overclass Redactor
+# The class will inherit information from the User with additional features						
+#   can modify and remove posts of User class  
+# 
+# class post
+# content, date of creation, date of modification
+#   methods: create, modify
+#   date of modification will update automaticly
+#           
+from datetime import date
+from abc import ABC, abstractmethod
+
+class AbstractPost(ABC):
+    @abstractmethod
+    def write_post(self):
+        pass
+
+    @abstractmethod
+    def modify_post(self):
+        pass
+
+    @abstractmethod
+    def delete_post(self):
+        pass
+
+class Post(AbstractPost):
+    def __init__(self):
+        self._content = None
+        self.date_of_creation = date.today().strftime(f"%d.%m.%Y")
+        self.date_of_modification = date.today().strftime(f"%d.%m.%Y")
+        self._delete_post = f'Post deleted'
+
+    def __str__(self):
+        return f'Post: {self._content}, it was created/modificated on {self.date_of_creation}'
+
+    def __repr__(self):
+        return f'content={self._content}, date_of_creation={self.date_of_creation}, date_of_modification={self.date_of_modification}'
+
+    @property
+    def write_post(self):
+        return self._content
+
+    @write_post.setter
+    def write_post(self, content):
+        self._content = content
+
+    @property
+    def modify_post(self):
+        return self._content
+
+    @modify_post.setter
+    def modify_post(self, new_text):
+        self._content = new_text
+        self.date_of_modification = date.today().strftime(f"%d.%m.%Y")
+
+    @property
+    def delete_post(self):
+        return self._delete_post
+
+    @delete_post.deleter
+    def delete_post(self):
+        del self._content
+
+class User(AbstractPost):
+    def __init__(self, firstname, surname, email, date_of_birth, gender):
+        self.firstname = firstname
+        self.surname = surname  
+        self.email = email
+        self.date_of_birth = date_of_birth
+        self.gender = gender
+        self._content = Post
+        self._delete_post = f'Post deleted'
+
+    def __repr__(self):
+        return f'firstname={self.firstname}, surname={self.surname}, email={self.email}, date_of_birth={self.date_of_birth}, gender={self.gender}'
+
+    @property
+    def write_post(self):
+        return self._content
+
+    @property
+    def modify_post(self):  
+        return super().modify_post()
+
+    def change_email(self, mail, new_mail):
+        if mail == self.email:
+            self.email = new_mail
+            return f'Success! Your new email address is {new_mail}'
+        else:
+            return f'It is not your email address!'
+
+    @write_post.setter
+    def write_post(self, content):
+        self._content = content
+        return Post()
+
+    @modify_post.setter
+    def modify_post(self, new_text):
+        return super().modify_post()
+
+    @property
+    def delete_post(self):
+        return super().delete_post()
+
+    @delete_post.deleter
+    def delete_post(self, exist_post):
+        # self._content = self._delete_post
+        del exist_post
+        # return self._delete_post
+
+class Administrator(User):
+
+    @property
+    def modify_post(self):
+        return super().modify_post
+
+    @modify_post.setter
+    def modify_post(self):
+        return super().modify_post
+
+    @property
+    def delete_post(self):
+        return super().delete_post
+
+    @delete_post.deleter
+    def delete_post(self):
+        return super().delete_post
+
+class Redactor(User):
+
+    @property
+    def modify_post(self):
+        return super().modify_post
+
+    @modify_post.setter
+    def modify_post(self):
+        return super().modify_post
+
+    @property
+    def delete_post(self):
+        return super().delete_post
+
+    @delete_post.deleter
+    def delete_post(self):
+        return super().delete_post
+
+    @property
+    def write_post(self):
+        return super().write_post
+
+    @write_post.setter
+    def write_post(self):
+        return super().write_post
+
+y = Post()
+y.write_post = 'Beautiful cats'
+print(y)
+y.modify_post = 'Beautiful cats and dogs'
+print(y)
+x = Post()
+x.write_post = 'Something'
+print(x)
+x.modify_post = 'Something else'
+print(x)
+print(y, x)
+wiktoria = User('Wiktoria', 'XYZ', 'xyz@g.com', '1900.01.01', 'woman')
+print(wiktoria.change_email('xyz@g.com', 'wiki@g.com'))
+print(wiktoria)
+print(wiktoria.change_email('xyyyz@g.com', 'wiki@g.com'))
+print(wiktoria)
+z = Post()
+z.write_post = 'Ble'
+wiktoria.write_post = z
+print(wiktoria.write_post)
+print(type(wiktoria.write_post))
+print(z)
+print(type(z))
+v = Post()
+v.write_post = 'oo'
+wiktoria.write_post = v
+print(wiktoria.write_post)
+print(type(wiktoria.write_post))
+print(v)
+print(type(v))
+v.modify_post = 'Beautiful animals'
+wiktoria.modify_post = v
+print(v)
+y.modify_post = 'kiwi'
+print(y)
+y = y.delete_post # czy samo y.delete_post czy print(y.delete_post) czy del y
+print(y)
+print(x, v, y)
+# del y
+# print(y)
+# wiktoria.delete_post = x
+# x = wiktoria.delete_post
+# print(x)
+# print(wiktoria.delete_post(x))
