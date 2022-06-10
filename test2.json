@@ -1,0 +1,9 @@
+
+{
+    "from_who": "mother@g.c", 
+    "to": "anna@g.c", 
+    "cc": "localhost@g.c", 
+    "bcc": "filip@g.c, father@g.c", 
+    "title": "Other test", 
+    "html": "<p>hi! hello world</p>"
+}
